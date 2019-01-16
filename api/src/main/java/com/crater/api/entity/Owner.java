@@ -1,14 +1,13 @@
 package com.crater.api.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-@Entity
+@Entity(name = "owner")
 public class Owner {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "int4")
     private Long id;
 
     // username == email for owners
