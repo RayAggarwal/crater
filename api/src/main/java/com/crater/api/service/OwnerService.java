@@ -12,7 +12,6 @@ import java.util.UUID;
 @Service
 public class OwnerService {
 
-
     private final PasswordEncoder passwordEncoder;
     private final OwnerRepository ownerRepository;
 
