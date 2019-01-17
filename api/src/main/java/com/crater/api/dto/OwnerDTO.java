@@ -7,6 +7,8 @@ public class OwnerDTO {
 
     private String password;
 
+    private String applicationId;
+
     public String getUsername() {
         return username;
     }
@@ -21,5 +23,12 @@ public class OwnerDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    public String getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(String applicationId) {
+        this.applicationId = applicationId;
     }
 }

@@ -9,13 +9,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping(path = "/owner/", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/owner", produces = MediaType.APPLICATION_JSON_VALUE)
 public class OwnerEndpoint extends AbstractEndpoint {
 
     private final OwnerService ownerService;
@@ -28,7 +29,7 @@ public class OwnerEndpoint extends AbstractEndpoint {
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OwnerDTO> registerOwner(OwnerRegistrationDTO ownerRegistrationDTO) {
+    public ResponseEntity<OwnerDTO> registerOwner(@RequestBody OwnerRegistrationDTO ownerRegistrationDTO) {
         Owner owner =  modelMapper.map(ownerRegistrationDTO, Owner.class);
         ownerService.createOwner(owner);
         OwnerDTO returnDTO = modelMapper.map(owner, OwnerDTO.class);
