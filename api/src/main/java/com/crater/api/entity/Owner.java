@@ -17,6 +17,12 @@ public class Owner {
 
     private String applicationId;
 
+    private Boolean active;
+
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    private VerificationToken verificationToken;
+
     public Long getId() {
         return id;
     }
@@ -47,5 +53,21 @@ public class Owner {
 
     public void setApplicationId(String applicationId) {
         this.applicationId = applicationId;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public VerificationToken getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(VerificationToken verificationToken) {
+        this.verificationToken = verificationToken;
     }
 }

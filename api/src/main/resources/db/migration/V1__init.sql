@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS public.owner (
   id INT GENERATED ALWAYS AS IDENTITY,
   username VARCHAR(64) NOT NULL UNIQUE,
   password VARCHAR NOT NULL,
-  applicationID VARCHAR(36),
+  application_id VARCHAR(36),
   PRIMARY KEY (id)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS username_idx ON public.owner (username);
