@@ -2,8 +2,10 @@ package com.crater.api.service;
 
 import com.crater.api.entity.Owner;
 import com.crater.api.entity.VerificationToken;
+import com.crater.api.event.event.OwnerRegistrationEvent;
 import com.crater.api.repository.OwnerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ public class OwnerService {
 
     private final PasswordEncoder passwordEncoder;
     private final OwnerRepository ownerRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     /**
      * Constructor
@@ -27,9 +30,10 @@ public class OwnerService {
      * @param ownerRepository The {@link Owner} repository.
      */
     @Autowired
-    public OwnerService(PasswordEncoder passwordEncoder, OwnerRepository ownerRepository) {
+    public OwnerService(PasswordEncoder passwordEncoder, OwnerRepository ownerRepository, ApplicationEventPublisher applicationEventPublisher) {
         this.passwordEncoder = passwordEncoder;
         this.ownerRepository = ownerRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     /**
@@ -42,6 +46,7 @@ public class OwnerService {
     public Owner createOwner(Owner owner) {
         owner.setPassword(passwordEncoder.encode(owner.getPassword()));
         owner.setApplicationId(UUID.randomUUID().toString());
+        owner.setActive(false);
         VerificationToken verificationToken = new VerificationToken();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
@@ -50,6 +55,13 @@ public class OwnerService {
         verificationToken.setToken("test");
         owner.setVerificationToken(verificationToken);
         verificationToken.setOwner(owner);
-        return ownerRepository.save(owner);
+        ownerRepository.save(owner);
+        publishRegistrationEvent(owner.getUsername(), verificationToken.getToken());
+        return owner;
+    }
+
+    private void publishRegistrationEvent(String username, String token) {
+        OwnerRegistrationEvent ownerRegistrationEvent = new OwnerRegistrationEvent(username, token);
+        applicationEventPublisher.publishEvent(ownerRegistrationEvent);
     }
 }
