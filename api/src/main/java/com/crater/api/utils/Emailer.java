@@ -1,20 +1,42 @@
 package com.crater.api.utils;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
+import com.crater.api.builder.EmailVerificationBuilder;
+import com.sendgrid.APICallback;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Emailer {
 
-    private final JavaMailSender javaMailSender;
+    private final SendGrid sendGrid;
 
-    @Autowired
-    public Emailer(JavaMailSender javaMailSender) {
-        this.javaMailSender = javaMailSender;
+    private String craterFromEmail;
+    private String templateId;
+
+    public Emailer() {
+        sendGrid = new SendGrid(System.getenv("SENDGRID_API_KEY"));
     }
 
     public void sendVerificationEmail(String to, String token) {
+        try {
+            Request request = new EmailVerificationBuilder().setFromEmail(craterFromEmail).setTemplateId(templateId)
+                    .setToEmail(to).addPersonalization("token", token)
+                    .buildRequest();
+            sendGrid.attempt(request, new APICallback() {
+                @Override
+                public void error(Exception ex) {
 
+                }
+
+                @Override
+                public void response(Response response) {
+
+                }
+            });
+        } catch (Exception e) {
+
+        }
     }
 }

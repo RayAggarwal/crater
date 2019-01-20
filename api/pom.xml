@@ -14,6 +14,7 @@
         <postgresql.version>42.2.5</postgresql.version>
         <jjwt.version>0.9.1</jjwt.version>
         <modelmapper.version>2.3.2</modelmapper.version>
+        <sendgrid.version>4.3.0</sendgrid.version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -36,10 +37,10 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
+            <groupId>com.sendgrid</groupId>
+            <artifactId>sendgrid-java</artifactId>
+            <version>${sendgrid.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
