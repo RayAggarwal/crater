@@ -1,14 +1,13 @@
 package com.crater.api.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-@Entity
+@Entity(name = "owner")
 public class Owner {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "int4")
     private Long id;
 
     // username == email for owners
@@ -17,6 +16,12 @@ public class Owner {
     private String password;
 
     private String applicationId;
+
+    private Boolean active;
+
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    private VerificationToken verificationToken;
 
     public Long getId() {
         return id;
@@ -48,5 +53,21 @@ public class Owner {
 
     public void setApplicationId(String applicationId) {
         this.applicationId = applicationId;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public VerificationToken getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(VerificationToken verificationToken) {
+        this.verificationToken = verificationToken;
     }
 }
