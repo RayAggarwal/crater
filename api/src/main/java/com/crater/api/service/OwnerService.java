@@ -1,5 +1,6 @@
 package com.crater.api.service;
 
+import com.crater.api.builder.OwnerRegistrationBuilder;
 import com.crater.api.entity.Owner;
 import com.crater.api.entity.VerificationToken;
 import com.crater.api.event.event.OwnerRegistrationEvent;
@@ -44,22 +45,18 @@ public class OwnerService {
      */
     @Transactional
     public Owner createOwner(Owner owner) {
-        owner.setPassword(passwordEncoder.encode(owner.getPassword()));
-        owner.setApplicationId(UUID.randomUUID().toString());
-        owner.setActive(false);
-        VerificationToken verificationToken = new VerificationToken();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.HOUR_OF_DAY, 24);
-        verificationToken.setExpiryTime(calendar.getTime());
-        verificationToken.setToken("test");
-        owner.setVerificationToken(verificationToken);
-        verificationToken.setOwner(owner);
+        owner = new OwnerRegistrationBuilder().setUsername(owner.getUsername())
+                .setHashedPassword(passwordEncoder.encode(owner.getPassword()))
+                .build();
         ownerRepository.save(owner);
-        publishRegistrationEvent(owner.getUsername(), verificationToken.getToken());
+        publishRegistrationEvent(owner.getUsername(), owner.getVerificationToken().getToken());
         return owner;
     }
 
+    @Transactional
+    public void deleteOwner(Owner owner) {
+
+    }
     private void publishRegistrationEvent(String username, String token) {
         OwnerRegistrationEvent ownerRegistrationEvent = new OwnerRegistrationEvent(username, token);
         applicationEventPublisher.publishEvent(ownerRegistrationEvent);

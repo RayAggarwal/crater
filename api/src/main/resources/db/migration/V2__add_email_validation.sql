@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS public.verification_token (
   id INT NOT NULL UNIQUE,
   token VARCHAR NOT NULL UNIQUE,
   expiry_time TIMESTAMP WITH TIME ZONE NOT NULL,
+  token_refresh_count SMALLINT NOT NULL default 0,
   PRIMARY KEY (id),
   FOREIGN KEY (id) REFERENCES public.owner (id)
 );
